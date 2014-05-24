@@ -1,5 +1,5 @@
 -module(orSet).
--export([new/0, lookup/2, add/2, remove/2]).
+-export([new/0, lookup/2, add/2, remove/2, merge/2, apply/2]).
 
 -record(orset, {}).
 
