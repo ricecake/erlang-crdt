@@ -3,6 +3,10 @@
 
 -record(orset, {}).
 
+% operations should return {Status, NewStructure, Operation}
+% should make it pretty easy to share either the structure or
+% the operation, depending on needs
+
 new() -> ok.
 lookup(Self, Key) -> ok.
 add(Self, Key) -> ok.
