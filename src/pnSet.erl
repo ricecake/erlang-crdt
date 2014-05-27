@@ -1,5 +1,5 @@
 -module(pnSet).
--export([new/0, lookup/2, add/2, remove/2, merge/2, apply/2]).
+-export([new/0, lookup/2, list/1, add/2, remove/2, merge/2, apply/2]).
 
 -record(pnset, {store}).
 
@@ -13,3 +13,6 @@ new() ->
 lookup(Self, Key) -> ok.
 add(Self, Key) -> ok.
 remove(Self, Key) -> ok.
+
+list(#psset{store = Store} = State) -> 
+	[ Item || {Item, _Count} <- dict:to_list(Store)].
