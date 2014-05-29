@@ -10,9 +10,22 @@
 new() ->
 	Store = dict:new(),
 	#pnset{store = Store}.
-lookup(Self, Key) -> ok.
-add(Self, Key) -> ok.
+
+lookup(#pnset{store=Store} = Self, Key) ->
+	case dict:find(Key, Store) of
+		{ok, Value} when Value > 0 -> true;
+		{ok, Value} -> false;
+		error -> false
+	end.
+
+add(#pnset{store = Store} = Self, Key) -> 
+	NewStore = dict:update_counter(Key, 1, Store),
+	Self#pnset{store = NewStore}.
+
 remove(Self, Key) -> ok.
+	NewStore = dict:update_counter(Key, -1, Store),
+	Self#pnset{store = NewStore}.
 
 list(#psset{store = Store} = State) -> 
-	[ Item || {Item, _Count} <- dict:to_list(Store)].
+	[ Item || {Item, Count} <- dict:to_list(Store), Count > 0].
+
