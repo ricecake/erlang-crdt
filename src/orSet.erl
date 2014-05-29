@@ -11,3 +11,5 @@ new() -> ok.
 lookup(Self, Key) -> ok.
 add(Self, Key) -> ok.
 remove(Self, Key) -> ok.
+merge(Self, Key) -> ok.
+apply(Self, Key) -> ok.

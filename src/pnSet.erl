@@ -22,10 +22,12 @@ add(#pnset{store = Store} = Self, Key) ->
 	NewStore = dict:update_counter(Key, 1, Store),
 	Self#pnset{store = NewStore}.
 
-remove(Self, Key) -> ok.
+remove(#pnset{store = Store} = Self, Key) -> 
 	NewStore = dict:update_counter(Key, -1, Store),
 	Self#pnset{store = NewStore}.
 
-list(#psset{store = Store} = State) -> 
+list(#pnset{store = Store} = State) -> 
 	[ Item || {Item, Count} <- dict:to_list(Store), Count > 0].
 
+merge(First, Second) -> ok.
+apply(State, Op) -> ok.
