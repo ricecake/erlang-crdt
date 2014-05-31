@@ -1,5 +1,5 @@
 -module(pnSet).
--export([new/0, lookup/2, list/1, add/2, remove/2, merge/2, apply/2]).
+-export([new/0, lookup/2, list/1, add/2, remove/2, merge/2, apply/2, gc/1]).
 
 -record(pnset, {store}).
 
@@ -35,3 +35,8 @@ merge(#pnset{store = Fstore}, #pnset{store = Sstore}) ->
 
 apply(State, {add, Key}) -> add(State, Key);
 apply(State, {del, Key}) -> remove(State, Key).
+
+gc(#pnset{store = Store}) ->
+	NewList = [ {Item, Count} || {Item, Count} <- dict:to_list(Store), Count /= 0],
+	#pnset{store = dict:from_list(NewList)}.
+
