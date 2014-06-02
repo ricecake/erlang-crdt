@@ -19,12 +19,12 @@ lookup(#pnset{store=Store}, Key) ->
 	end.
 
 add(#pnset{store = Store} = Self, Key) -> 
-	Initial = case dict:find(Key, Store) of
-		{ok, Value} when Value > 0 -> Value;
-		{ok, Value} when Value < 1 -> abs(Value);
-		error -> 0
+	Increment = case dict:find(Key, Store) of
+		{ok, Value} when Value > 0 -> 1;
+		{ok, Value} when Value < 1 -> abs(Value)+1;
+		error -> 1
 	end,
-	NewStore = dict:update_counter(Key, Initial+1, Store),
+	NewStore = dict:update_counter(Key, Increment, Store),
 	{ok, Self#pnset{store = NewStore}, {add, Key}}.
 
 remove(#pnset{store = Store} = Self, Key) -> 
