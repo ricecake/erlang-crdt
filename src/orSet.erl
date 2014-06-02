@@ -12,8 +12,10 @@ lookup(Self, Key) -> ok.
 add(#orset{store = Store}, Key) -> 
 	SubMap = case dict:find(Key, Store) of 
 		{ok, Value} -> Value;
-		error       -> dict:new()
+		error       -> sets:new()
 	end,
+	Ref = erlang:make_ref(),
+	NewStore = sets:add_element(Ref, SubMap),
 	ok.
 remove(Self, Key) -> ok.
 merge(Self, Key) -> ok.
