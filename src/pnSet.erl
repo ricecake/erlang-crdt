@@ -18,14 +18,20 @@ lookup(#pnset{store=Store}, Key) ->
 		error -> false
 	end.
 
-add(#pnset{store = Store} = Self, Key) -> 
+add(Store, Key) -> 
+	case lookup(Store, Key) of
+		true -> {ok, Store, {add, Key, 0}};
+		false-> do_add(Store, Key)
+	end.
+
+do_add(#pnset{store = Store} = Self, Key) -> 
 	Increment = case dict:find(Key, Store) of
 		{ok, Value} when Value > 0 -> 1;
 		{ok, Value} when Value < 1 -> abs(Value)+1;
 		error -> 1
 	end,
 	NewStore = dict:update_counter(Key, Increment, Store),
-	{ok, Self#pnset{store = NewStore}, {add, Key}}.
+	{ok, Self#pnset{store = NewStore}, {add, Key, Increment}}.
 
 remove(#pnset{store = Store} = Self, Key) -> 
 	NewStore = dict:update_counter(Key, -1, Store),
@@ -38,7 +44,7 @@ merge(#pnset{store = Fstore}, #pnset{store = Sstore}) ->
 	NewStore = lists:foldl(fun({Key, Count}, Store)-> dict:update_counter(Key, Count, Store) end, Fstore, dict:to_list(Sstore)),
 	#pnset{store = NewStore}.
 
-apply(State, {add, Key}) -> add(State, Key);
+apply(State, {add, Key}) -> do_add(State, Key);
 apply(State, {del, Key}) -> remove(State, Key).
 
 gc(#pnset{store = Store}) ->
