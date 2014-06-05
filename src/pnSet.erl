@@ -31,7 +31,10 @@ do_add(#pnset{store = Store} = Self, Key) ->
 		error -> 1
 	end,
 	NewStore = dict:update_counter(Key, Increment, Store),
-	{ok, Self#pnset{store = NewStore}, {add, Key, Increment}}.
+	{ok, Self#pnset{store = NewStore}, {add, Key, Increment}};
+do_add(#pnset{store = Store} = Self, {add, Key, Increment}) -> 
+	NewStore = dict:update_counter(Key, Increment, Store),
+	{ok, Self#pnset{store = NewStore}, {add, Key, Increment}};
 
 remove(#pnset{store = Store} = Self, Key) -> 
 	NewStore = dict:update_counter(Key, -1, Store),
